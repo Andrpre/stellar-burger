@@ -1,3 +1,10 @@
+export enum RequestStatus {
+  Idle = 'Idle',
+  Loading = 'Loading',
+  Success = 'Success',
+  Failed = 'Failed'
+}
+
 export type TIngredient = {
   _id: string;
   name: string;
