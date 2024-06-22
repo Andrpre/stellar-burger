@@ -1,12 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  TConstructorIngredient,
-  RequestStatus,
-  TOrder,
-  TIngredient
-} from '../utils/types';
-import { TNewOrderResponse, orderBurgerApi } from '../utils/burger-api';
+import { TConstructorIngredient, TIngredient } from '../utils/types';
 
 interface burgerConstructorState {
   bun: TConstructorIngredient | null;
@@ -18,7 +12,7 @@ const initialState: burgerConstructorState = {
   ingredients: []
 };
 
-const burgerConstructorSlice = createSlice({
+export const burgerConstructorSlice = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
@@ -69,4 +63,3 @@ export const {
   moveIngredientArrayDown,
   clearBurgerConstructor
 } = burgerConstructorSlice.actions;
-export default burgerConstructorSlice.reducer;

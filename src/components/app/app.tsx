@@ -14,9 +14,15 @@ import '../../index.css';
 import styles from './app.module.css';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
-import { AppHeader, Modal, IngredientDetails } from '@components';
+import {
+  AppHeader,
+  Modal,
+  IngredientDetails,
+  ProtectedRoute
+} from '@components';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
+import { checkUserAuth } from '../../slices/user';
 
 const App = () => {
   const navigate = useNavigate();
@@ -26,6 +32,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
+    dispatch(checkUserAuth());
   }, []);
 
   return (
@@ -34,6 +41,22 @@ const App = () => {
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+        <Route
+          path='/login'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
