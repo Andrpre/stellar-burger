@@ -45,4 +45,3 @@ export const ingredientsSlice = createSlice({
 
 export const { selectIngredients, getLoadIngredients } =
   ingredientsSlice.selectors;
-export const {} = ingredientsSlice.actions;

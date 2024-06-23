@@ -9,22 +9,30 @@ import {
   createOrder,
   clearInfo
 } from '../../slices/order';
+import { userDataSelector } from '../../slices/user';
+import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
   const constructorItems = useSelector(selectState);
   const status = useSelector(selectStatus);
   const orderModalData = useSelector(selectInfo);
+  const user = useSelector(userDataSelector);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const orderRequest = status === RequestStatus.Loading ? true : false;
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-    const ingredientsIdArr = constructorItems.ingredients.map(
-      (item) => item._id
-    );
-    ingredientsIdArr.push(constructorItems.bun._id);
-    dispatch(createOrder(ingredientsIdArr));
+    if (!user) {
+      navigate('/login');
+    } else {
+      const ingredientsIdArr = constructorItems.ingredients.map(
+        (item) => item._id
+      );
+      ingredientsIdArr.push(constructorItems.bun._id);
+      dispatch(createOrder(ingredientsIdArr));
+    }
   };
   const closeOrderModal = () => {
     dispatch(clearInfo());
