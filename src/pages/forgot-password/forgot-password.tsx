@@ -12,6 +12,7 @@ export const ForgotPassword: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    if (!email) return;
 
     setError(null);
     forgotPasswordApi({ email })
