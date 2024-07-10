@@ -1,4 +1,3 @@
-import { expect, describe } from '@jest/globals';
 import {
   burgerConstructorSlice,
   addIngredientToOrder,
@@ -11,7 +10,6 @@ import {
 import { configureStore } from '@reduxjs/toolkit';
 
 describe('[burgerConstructorSlice] срез отвечающий за работу конструктора бургера', () => {
-  // начальное состояние, которое будем менять в тестах
   const initialState = {
     ingredients: [],
     bun: null
@@ -19,7 +17,21 @@ describe('[burgerConstructorSlice] срез отвечающий за работ
 
   describe('Тесты reducers', () => {
     const stateWithIngredients = {
-      bun: null,
+      bun: {
+        _id: '643d69a5c3f7b9001cfa093d',
+        name: 'Флюоресцентная булка R2-D3',
+        type: 'bun',
+        proteins: 44,
+        fat: 26,
+        carbohydrates: 85,
+        calories: 643,
+        price: 988,
+        image: 'https://code.s3.yandex.net/react/code/bun-01.png',
+        image_mobile: 'https://code.s3.yandex.net/react/code/bun-01-mobile.png',
+        image_large: 'https://code.s3.yandex.net/react/code/bun-01-large.png',
+        __v: 0,
+        id: '3208b522-f6f2-4f8a-8aed-22456fa1c230'
+      },
       ingredients: [
         {
           _id: '643d69a5c3f7b9001cfa0941',
@@ -59,22 +71,7 @@ describe('[burgerConstructorSlice] срез отвечающий за работ
     };
 
     it('Добавить булку в конструктор', () => {
-      const bun = {
-        _id: '643d69a5c3f7b9001cfa093d',
-        name: 'Флюоресцентная булка R2-D3',
-        type: 'bun',
-        proteins: 44,
-        fat: 26,
-        carbohydrates: 85,
-        calories: 643,
-        price: 988,
-        image: 'https://code.s3.yandex.net/react/code/bun-01.png',
-        image_mobile: 'https://code.s3.yandex.net/react/code/bun-01-mobile.png',
-        image_large: 'https://code.s3.yandex.net/react/code/bun-01-large.png',
-        __v: 0,
-        id: '3208b522-f6f2-4f8a-8aed-22456fa1c230'
-      };
-      const action = addIngredientToOrder(bun);
+      const action = addIngredientToOrder(stateWithIngredients.bun);
       const newState = burgerConstructorSlice.reducer(initialState, action);
 
       expect(newState).toEqual({
@@ -84,20 +81,7 @@ describe('[burgerConstructorSlice] срез отвечающий за работ
     });
 
     it('Добавить ингредиент в конструктор', () => {
-      const ingredient = {
-        _id: '643d69a5c3f7b9001cfa0948',
-        name: 'Кристаллы марсианских альфа-сахаридов',
-        type: 'main',
-        proteins: 234,
-        fat: 432,
-        carbohydrates: 111,
-        calories: 189,
-        price: 762,
-        image: 'https://code.s3.yandex.net/react/code/core.png',
-        image_mobile: 'https://code.s3.yandex.net/react/code/core-mobile.png',
-        image_large: 'https://code.s3.yandex.net/react/code/core-large.png'
-      };
-      const action = addIngredientToOrder(ingredient);
+      const action = addIngredientToOrder(stateWithIngredients.ingredients[0]);
       const newState = burgerConstructorSlice.reducer(initialState, action);
 
       expect(newState.ingredients.length).toBe(1);
@@ -162,13 +146,12 @@ describe('[burgerConstructorSlice] срез отвечающий за работ
   });
 
   describe('Тесты selectors', () => {
+    const store = configureStore({
+      reducer: {
+        burgerConstructor: burgerConstructorSlice.reducer
+      }
+    });
     it('Тестируем селектор selectState для получения текущего состояния', () => {
-      const store = configureStore({
-        reducer: {
-          burgerConstructor: burgerConstructorSlice.reducer
-        }
-      });
-
       const state = store.getState();
       const selectedState = selectState(store.getState());
 

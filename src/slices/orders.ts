@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RequestStatus, TOrder } from '@utils-types';
 import { getOrdersApi } from '../utils/burger-api';
 
-interface ordersState {
+export interface OrdersState {
   orders: TOrder[];
   status: RequestStatus;
 }
 
-const initialState: ordersState = {
+const initialState: OrdersState = {
   orders: [],
   status: RequestStatus.Idle
 };
@@ -21,7 +21,7 @@ export const ordersSlice = createSlice({
   initialState,
   reducers: {},
   selectors: {
-    selectOrders: (sliceState: ordersState) => sliceState.orders
+    selectOrders: (sliceState: OrdersState) => sliceState.orders
   },
   extraReducers: (builder) => {
     builder

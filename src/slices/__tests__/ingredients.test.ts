@@ -3,12 +3,10 @@ import {
   ingredientsSlice,
   getIngredients,
   selectIngredients,
-  getLoadIngredients
+  getLoadIngredients,
+  IngredientState
 } from '../ingredients';
 import { TIngredient, RequestStatus } from '../../utils/types';
-import { getIngredientsApi } from '../../utils/burger-api';
-
-jest.mock('../../utils/burger-api');
 
 describe('[ingredientsSlice] срез отвечающий за работу с ингредиентами', () => {
   const initialState = {
@@ -16,111 +14,74 @@ describe('[ingredientsSlice] срез отвечающий за работу с 
     status: RequestStatus.Idle
   };
 
+  const ingredientsTestResponse: TIngredient[] = [
+    {
+      _id: '643d69a5c3f7b9001cfa0941',
+      name: 'Биокотлета из марсианской Магнолии',
+      type: 'main',
+      proteins: 420,
+      fat: 142,
+      carbohydrates: 242,
+      calories: 4242,
+      price: 424,
+      image: 'https://code.s3.yandex.net/react/code/meat-01.png',
+      image_mobile: 'https://code.s3.yandex.net/react/code/meat-01-mobile.png',
+      image_large: 'https://code.s3.yandex.net/react/code/meat-01-large.png'
+    }
+  ] as TIngredient[];
+
   describe('Тесты асинхронных экшенов', () => {
-    it('Проверяем ожидающее состояние getIngredients', () => {
+    const expectedState: IngredientState = {
+      status: RequestStatus.Success,
+      data: ingredientsTestResponse
+    };
+    it('Проверяем значение loading для свойсвта status при отправке getIngredients.pending', () => {
       const action = { type: getIngredients.pending.type };
       const state = ingredientsSlice.reducer(initialState, action);
-
-      expect(state).toEqual({
-        ...initialState,
-        status: RequestStatus.Loading
-      });
+      expect(state.status).toBe(RequestStatus.Loading);
     });
 
-    it('Проверяем выполненное состояние getIngredients', () => {
-      const payload: TIngredient[] = [
-        {
-          _id: '643d69a5c3f7b9001cfa0941',
-          name: 'Биокотлета из марсианской Магнолии',
-          type: 'main',
-          proteins: 420,
-          fat: 142,
-          carbohydrates: 242,
-          calories: 4242,
-          price: 424,
-          image: 'https://code.s3.yandex.net/react/code/meat-01.png',
-          image_mobile:
-            'https://code.s3.yandex.net/react/code/meat-01-mobile.png',
-          image_large: 'https://code.s3.yandex.net/react/code/meat-01-large.png'
-        }
-      ] as TIngredient[];
-      const action = { type: getIngredients.fulfilled.type, payload };
-      const state = ingredientsSlice.reducer(initialState, action);
+    it('Обновляем состояние с данными заказа и ставим значение success для свойсвта status при отправке getIngredients.fulfilled', () => {
+      const actualState = ingredientsSlice.reducer(
+        initialState,
+        getIngredients.fulfilled(ingredientsTestResponse, '')
+      );
+      expect(actualState).toEqual(expectedState);
+      expect(actualState.status).toBe(RequestStatus.Success);
+    });
 
-      expect(state).toEqual({
-        data: payload,
-        status: RequestStatus.Success
-      });
+    it('Проверяем состояние и ставим значение failed для свойсвта status при отправке getIngredients.rejected', () => {
+      const expectedState: IngredientState = {
+        ...initialState,
+        status: RequestStatus.Failed
+      };
+      const actualState = ingredientsSlice.reducer(
+        initialState,
+        getIngredients.rejected(new Error('Error'), '')
+      );
+      expect(actualState).toEqual(expectedState);
+      expect(actualState.status).toBe(RequestStatus.Failed);
     });
   });
 
-  //   it('should handle rejected state of getIngredients', () => {
-  //     const action = { type: getIngredients.rejected.type };
-  //     const state = ingredientsSlice.reducer(initialState, action);
+  describe('Тесты selectors', () => {
+    const store = configureStore({
+      reducer: {
+        ingredients: ingredientsSlice.reducer
+      }
+    });
+    it('Тестируем селектор selectIngredients для получения всех ингредиентов', () => {
+      const state = store.getState();
+      const selectedState = selectIngredients(store.getState());
 
-  //     expect(state).toEqual({
-  //       ...initialState,
-  //       status: RequestStatus.Failed
-  //     });
-  //   });
+      expect(selectedState).toEqual(state.ingredients.data);
+    });
 
-  //   it('should select ingredients', () => {
-  //     const state = {
-  //       ingredients: {
-  //         ...initialState,
-  //         data: [{ id: '1', name: 'Bun' }] as TIngredient[]
-  //       }
-  //     };
-  //     expect(selectIngredients(state.ingredients)).toEqual(
-  //       state.ingredients.data
-  //     );
-  //   });
+    it('Тестируем селектор getLoadIngredients для получения текущего статуса', () => {
+      const state = store.getState();
+      const selectedState = getLoadIngredients(store.getState());
 
-  //   it('should select load ingredients status', () => {
-  //     const state = {
-  //       ingredients: {
-  //         ...initialState,
-  //         status: RequestStatus.Loading
-  //       }
-  //     };
-  //     expect(getLoadIngredients(state.ingredients)).toEqual(
-  //       state.ingredients.status
-  //     );
-  //   });
-
-  //   it('should dispatch getIngredients and handle success', async () => {
-  //     const store = configureStore({
-  //       reducer: {
-  //         ingredients: ingredientsSlice.reducer
-  //       }
-  //     });
-
-  //     const mockResponse: TIngredient[] = [
-  //       { id: '1', name: 'Bun' }
-  //     ] as TIngredient[];
-  //     (getIngredientsApi as jest.Mock).mockResolvedValueOnce(mockResponse);
-
-  //     await store.dispatch(getIngredients());
-
-  //     const state = store.getState().ingredients;
-  //     expect(state.status).toBe(RequestStatus.Success);
-  //     expect(state.data).toEqual(mockResponse);
-  //   });
-
-  //   it('should dispatch getIngredients and handle failure', async () => {
-  //     const store = configureStore({
-  //       reducer: {
-  //         ingredients: ingredientsSlice.reducer
-  //       }
-  //     });
-
-  //     (getIngredientsApi as jest.Mock).mockRejectedValueOnce(
-  //       new Error('Failed to fetch')
-  //     );
-
-  //     await store.dispatch(getIngredients());
-
-  //     const state = store.getState().ingredients;
-  //     expect(state.status).toBe(RequestStatus.Failed);
-  //   });
+      expect(selectedState).toEqual(state.ingredients.status);
+    });
+  });
 });
