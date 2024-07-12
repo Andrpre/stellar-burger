@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { ingredientsSlice } from '../slices/ingredients';
 import { burgerConstructorSlice } from '../slices/burgerConstructor';
@@ -10,23 +10,22 @@ import { ordersSlice } from '../slices/orders';
 import store from './store';
 
 describe('Инициализация rootReducer', () => {
+  const rootReducer = combineReducers({
+    [ingredientsSlice.name]: ingredientsSlice.reducer,
+    [burgerConstructorSlice.name]: burgerConstructorSlice.reducer,
+    [orderSlice.name]: orderSlice.reducer,
+    [userSlice.name]: userSlice.reducer,
+    [feedSlice.name]: feedSlice.reducer,
+    [ordersSlice.name]: ordersSlice.reducer
+  });
+
+  const testStore = configureStore({
+    reducer: rootReducer,
+    devTools: process.env.NODE_ENV !== 'production'
+  });
+
+  const state = testStore.getState();
   it('Инициализируем хранилище с правильными редукторами', () => {
-    const rootReducer = {
-      [ingredientsSlice.name]: ingredientsSlice.reducer,
-      [burgerConstructorSlice.name]: burgerConstructorSlice.reducer,
-      [orderSlice.name]: orderSlice.reducer,
-      [userSlice.name]: userSlice.reducer,
-      [feedSlice.name]: feedSlice.reducer,
-      [ordersSlice.name]: ordersSlice.reducer
-    };
-
-    const testStore = configureStore({
-      reducer: rootReducer,
-      devTools: process.env.NODE_ENV !== 'production'
-    });
-
-    const state = testStore.getState();
-
     expect(state).toHaveProperty(ingredientsSlice.name);
     expect(state).toHaveProperty(burgerConstructorSlice.name);
     expect(state).toHaveProperty(orderSlice.name);
@@ -68,5 +67,22 @@ describe('Инициализация rootReducer', () => {
     expect(actualState[ordersSlice.name]).toEqual(
       ordersSlice.getInitialState()
     );
+  });
+  it('Возвращает начальное состояние при undefined state и неизвестном действии', () => {
+    const unknownAction = { type: 'UNKNOWN_ACTION' };
+
+    const initialState = {
+      [ingredientsSlice.name]: ingredientsSlice.getInitialState(),
+      [burgerConstructorSlice.name]: burgerConstructorSlice.getInitialState(),
+      [orderSlice.name]: orderSlice.getInitialState(),
+      [userSlice.name]: userSlice.getInitialState(),
+      [feedSlice.name]: feedSlice.getInitialState(),
+      [ordersSlice.name]: ordersSlice.getInitialState()
+    };
+
+    // Прямой вызов rootReducer с undefined state и неизвестным action
+    const resultState = rootReducer(undefined, unknownAction);
+
+    expect(resultState).toEqual(initialState);
   });
 });
