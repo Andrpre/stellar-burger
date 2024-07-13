@@ -9,18 +9,13 @@ import {
   userSlice,
   isAuthCheckedSelector,
   userDataSelector,
-  userDataNameSelector
+  userDataNameSelector,
+  initialState
 } from '../user';
 import { RequestStatus, TUser } from '@utils-types';
 import { TLoginData, TRegisterData } from '../../utils/burger-api';
 
 describe('[userSlice] срез отвечающий за работу пользователем', () => {
-  const initialState: TUserState = {
-    isAuthChecked: false,
-    data: null,
-    requestStatus: RequestStatus.Idle
-  };
-
   const userTestResponse: TUser = {
     email: 'andrpre@gmail.com',
     name: 'Andrpre'

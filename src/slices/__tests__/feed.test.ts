@@ -5,19 +5,13 @@ import {
   selectOrders,
   selectFeed,
   getStatusRequest,
-  FeedState
+  FeedState,
+  initialState
 } from '../feed';
 import { TFeedsResponse } from '../../utils/burger-api';
 import { RequestStatus, TOrder } from '@utils-types';
 
 describe('[feedSlice] срез отвечающий за работу истории всех заказов', () => {
-  const initialState = {
-    orders: [],
-    total: 0,
-    totalToday: 0,
-    status: RequestStatus.Idle
-  };
-
   const feedTestResponseOrders: TOrder[] = [
     {
       _id: '668d3ae1119d45001b4f579c',

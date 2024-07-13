@@ -13,7 +13,7 @@ export interface OrderState {
   status: RequestStatus;
 }
 
-const initialState: OrderState = {
+export const initialState: OrderState = {
   info: null,
   status: RequestStatus.Idle
 };

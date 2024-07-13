@@ -6,17 +6,13 @@ import {
   selectStatus,
   selectInfo,
   clearInfo,
-  OrderState
+  OrderState,
+  initialState
 } from '../order';
 import { RequestStatus, TOrder } from '@utils-types';
 import { TNewOrderResponse, TOrderResponse } from '../../utils/burger-api';
 
 describe('[orderSlice] срез отвечающий за работу с одним заказом', () => {
-  const initialState: OrderState = {
-    info: null,
-    status: RequestStatus.Idle
-  };
-
   const orderTestResponse: TOrderResponse = {
     success: true,
     orders: [

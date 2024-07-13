@@ -5,16 +5,12 @@ import {
   moveIngredientArrayUp,
   moveIngredientArrayDown,
   clearBurgerConstructor,
-  selectState
+  selectState,
+  initialState
 } from '../burgerConstructor';
 import { configureStore } from '@reduxjs/toolkit';
 
 describe('[burgerConstructorSlice] срез отвечающий за работу конструктора бургера', () => {
-  const initialState = {
-    ingredients: [],
-    bun: null
-  };
-
   describe('Тесты reducers', () => {
     const stateWithIngredients = {
       bun: {

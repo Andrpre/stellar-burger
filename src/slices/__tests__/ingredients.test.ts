@@ -4,16 +4,12 @@ import {
   getIngredients,
   selectIngredients,
   getLoadIngredients,
-  IngredientState
+  IngredientState,
+  initialState
 } from '../ingredients';
 import { TIngredient, RequestStatus } from '../../utils/types';
 
 describe('[ingredientsSlice] срез отвечающий за работу с ингредиентами', () => {
-  const initialState = {
-    data: [],
-    status: RequestStatus.Idle
-  };
-
   const ingredientsTestResponse: TIngredient[] = [
     {
       _id: '643d69a5c3f7b9001cfa0941',

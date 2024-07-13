@@ -7,7 +7,7 @@ export interface IngredientState {
   status: RequestStatus;
 }
 
-const initialState: IngredientState = {
+export const initialState: IngredientState = {
   data: [],
   status: RequestStatus.Idle
 };

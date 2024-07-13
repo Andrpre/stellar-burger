@@ -1,14 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { ordersSlice, selectOrders, getOrders, OrdersState } from '../orders';
+import {
+  ordersSlice,
+  selectOrders,
+  getOrders,
+  OrdersState,
+  initialState
+} from '../orders';
 import { RequestStatus, TOrder } from '@utils-types';
 import {} from '../../utils/burger-api';
 
 describe('[ordersSlice] срез отвечающий за работу со всеми заказами', () => {
-  const initialState: OrdersState = {
-    orders: [],
-    status: RequestStatus.Idle
-  };
-
   const ordersTestResponse: TOrder[] = [
     {
       _id: '668e1578119d45001b4f7c66',
