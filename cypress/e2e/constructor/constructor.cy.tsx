@@ -7,12 +7,10 @@ describe('Добавление булки и ингредиента из спи�
       fixture: 'ingredients.json'
     });
     cy.viewport(1300, 800);
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
   it('Создаем булку в конструктере, через добавление булки, начинки и соуса', () => {
-    cy.get(`[data-cy=ingredient-1]`).contains('Добавить').click();
-    cy.get(`[data-cy=ingredient-3]`).contains('Добавить').click();
-    cy.get(`[data-cy=ingredient-4]`).contains('Добавить').click();
+    cy.addIngredients([1, 3, 4]);
 
     cy.get(`[data-cy=constructor-1]`)
       .contains('Краторная булка N-200i')
@@ -32,18 +30,18 @@ describe('Работа модальных окон', () => {
       fixture: 'ingredients.json'
     });
     cy.viewport(1300, 800);
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
   it('Открытие модального окна ингредиента', () => {
-    cy.contains('Детали ингредиента').should('not.exist');
-    cy.get(`[data-cy=ingredient-1]`).click();
+    cy.isModalIngredient(false);
+    cy.clickIngredient(1);
     cy.contains('Краторная булка N-200i').should('exist');
   });
   it('Закрытие модального окна ингредиента по крестику', () => {
-    cy.contains('Детали ингредиента').should('not.exist');
-    cy.get(`[data-cy=ingredient-1]`).click();
-    cy.get(`button[aria-lable="Закрыть"]`).click();
-    cy.contains('Детали ингредиента').should('not.exist');
+    cy.isModalIngredient(false);
+    cy.clickIngredient(1);
+    cy.closeModal();
+    cy.isModalIngredient(false);
   });
 });
 
@@ -65,21 +63,19 @@ describe('Создание заказа', () => {
     );
     cy.setCookie('accessToken', 'data.accessToken');
     cy.viewport(1300, 800);
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
   afterEach(() => {
     cy.clearAllLocalStorage();
     cy.clearCookies();
   });
   it('Собираем бургер и оформляем заказ', () => {
-    cy.get(`[data-cy=ingredient-1]`).contains('Добавить').click();
-    cy.get(`[data-cy=ingredient-3]`).contains('Добавить').click();
-    cy.get(`[data-cy=ingredient-4]`).contains('Добавить').click();
+    cy.addIngredients([1, 3, 4]);
 
     cy.get(`[id=submit-order-button]`).contains('Оформить заказ').click();
     cy.wait('@postOrder');
     cy.get('[data-cy=order-number]').contains('45513').should('exist');
-    cy.get(`button[aria-lable="Закрыть"]`).click();
+    cy.closeModal();
     cy.get('[data-cy=order-number]').should('not.exist');
 
     cy.get(`[data-cy=container-constructor]`)

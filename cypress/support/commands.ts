@@ -1,37 +1,33 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+//Закрываем модальное окно по нажатию на крестик
+Cypress.Commands.add('closeModal', () => {
+  cy.get(`button[aria-lable="Закрыть"]`).click();
+});
+
+//Добавляем ингредиент в конструктор
+Cypress.Commands.add('addIngredients', (ingredientIdArr) => {
+  ingredientIdArr.forEach((id) => {
+    cy.get(`[data-cy=ingredient-${id}]`).contains('Добавить').click();
+  });
+});
+
+//Кликаем на ингредиент
+Cypress.Commands.add('clickIngredient', (ingredientId) => {
+  cy.get(`[data-cy=ingredient-${ingredientId}]`).click();
+});
+
+//Проверяем открыто/закрыто ли модальное окно ингредиента
+Cypress.Commands.add('isModalIngredient', (check) => {
+    const checkExist = check ? 'exist' : 'not.exist';
+    cy.contains('Детали ингредиента').should(checkExist);
+});
+
+declare namespace Cypress {
+  interface Chainable<Subject> {
+    closeModal(): void;
+    addIngredients(ingredientIdArr: Array<number>): void;
+    clickIngredient(ingredientId: number): void;
+    isModalIngredient(check: boolean): void;
+  }
+}
