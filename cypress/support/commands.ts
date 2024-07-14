@@ -2,7 +2,7 @@
 
 //Закрываем модальное окно по нажатию на крестик
 Cypress.Commands.add('closeModal', () => {
-  cy.get(`button[aria-lable="Закрыть"]`).click();
+  cy.get(`button[aria-label="Закрыть"]`).click();
 });
 
 //Добавляем ингредиент в конструктор

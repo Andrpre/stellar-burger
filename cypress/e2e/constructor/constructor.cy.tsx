@@ -70,6 +70,7 @@ describe('Создание заказа', () => {
     cy.clearCookies();
   });
   it('Собираем бургер и оформляем заказ', () => {
+    const containerConstructor = '[data-cy=container-constructor]';
     cy.addIngredients([1, 3, 4]);
 
     cy.get(`[id=submit-order-button]`).contains('Оформить заказ').click();
@@ -78,13 +79,13 @@ describe('Создание заказа', () => {
     cy.closeModal();
     cy.get('[data-cy=order-number]').should('not.exist');
 
-    cy.get(`[data-cy=container-constructor]`)
+    cy.get(containerConstructor)
       .contains('Краторная булка N-200i')
       .should('not.exist');
-    cy.get(`[data-cy=container-constructor]`)
+    cy.get(containerConstructor)
       .contains('Филе Люминесцентного тетраодонтимформа')
       .should('not.exist');
-    cy.get(`[data-cy=container-constructor]`)
+    cy.get(containerConstructor)
       .contains('Соус Spicy-X')
       .should('not.exist');
   });

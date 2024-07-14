@@ -46,6 +46,9 @@ export const registerUser = createAsyncThunk(
 );
 
 export const checkUserAuth = createAsyncThunk('user/checkUser', async () => {
+  if (document.cookie.indexOf('accessToken')) {
+    return rejectWithValue('User is not authorized');
+  }
   const data = await getUserApi();
   return data.user;
 });
@@ -158,3 +161,6 @@ export const userSlice = createSlice({
 
 export const { isAuthCheckedSelector, userDataSelector, userDataNameSelector } =
   userSlice.selectors;
+function rejectWithValue(arg0: string): any {
+  throw new Error('Function not implemented.');
+}
