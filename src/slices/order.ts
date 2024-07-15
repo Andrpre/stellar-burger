@@ -8,12 +8,12 @@ import {
 } from '../utils/burger-api';
 import { clearBurgerConstructor } from './burgerConstructor';
 
-interface orderState {
+export interface OrderState {
   info: TOrder | null;
   status: RequestStatus;
 }
 
-const initialState: orderState = {
+export const initialState: OrderState = {
   info: null,
   status: RequestStatus.Idle
 };
@@ -44,8 +44,8 @@ export const orderSlice = createSlice({
     }
   },
   selectors: {
-    selectStatus: (sliceState: orderState) => sliceState.status,
-    selectInfo: (sliceState: orderState) => sliceState.info
+    selectStatus: (sliceState: OrderState) => sliceState.status,
+    selectInfo: (sliceState: OrderState) => sliceState.info
   },
   extraReducers: (builder) => {
     builder
