@@ -83,6 +83,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
+    publicPath: '/projects/stellar-burger/',
     filename: 'bundle.js'
   },
   devServer: {
@@ -90,6 +91,8 @@ module.exports = {
     compress: true,
     historyApiFallback: true,
     port: 4000,
-    open: true
+    open: {
+      target: 'projects/stellar-burger'
+    }
   }
 };
